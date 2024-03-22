@@ -26,14 +26,14 @@ app.get( "/filteredimage", async (req, res) => {
         filePath = await filterImageFromURL(imageUrl);
 
         // 3. send the resulting file in the response
-        res.status(200).send(filePath);
+        return res.status(200).sendFile(filePath, err => {
+            //  4. deletes any files on the server on finish of the response
+            deleteLocalFiles([filePath]);
+        });
+
     } catch (error) {
         return res.status(422).send(`Image is not valid: ` + imageUrl)
     }
-
-    //  4. deletes any files on the server on finish of the response
-    await deleteLocalFiles([filePath]);
-    return res;
 } );
     /**************************************************************************** */
 
